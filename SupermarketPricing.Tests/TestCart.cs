@@ -16,7 +16,7 @@ public class TestCart
     public void CartWithItem()
     {
         var fiveDollarItem = new Item("burger", 5);
-        var justFiveDollarItem = new Cart([fiveDollarItem]);
+        var justFiveDollarItem = new Cart { Items = [fiveDollarItem] };
 
         justFiveDollarItem.Cost().Should().Be(5);
     }
@@ -25,16 +25,16 @@ public class TestCart
     public void CartWithManyItems()
     {
         var fiveDollarItem = new Item("burger", 5);
-        var threeFiveDollarItems = new Cart([fiveDollarItem, fiveDollarItem, fiveDollarItem]);
+        var twoFiveDollarItems = new Cart { Items = [fiveDollarItem, fiveDollarItem] };
 
-        threeFiveDollarItems.Cost().Should().Be(15);
+        twoFiveDollarItems.Cost().Should().Be(10);
     }
 
     [Fact]
     public void CartItemChange()
     {
         var pennyItem = new Item("candy", .01);
-        var tenPennyItems = new Cart(Enumerable.Repeat(pennyItem, 10).ToList());
+        var tenPennyItems = new Cart { Items = Enumerable.Repeat(pennyItem, 10).ToList() };
 
         tenPennyItems.Cost().Should().Be(.10);
     }

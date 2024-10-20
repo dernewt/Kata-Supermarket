@@ -1,12 +1,9 @@
 ﻿namespace SupermarketPricing;
 
-public class Cart(List<Item> Items)
+public class Cart()
 {
-    public Cart()
-        :this([])
-    {
-        
-    }
+    public List<Item> Items { get; init; } = [];
+
     public double Cost()
     {
         return Items.Sum(i=>i.Price);
