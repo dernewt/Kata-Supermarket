@@ -1,6 +1,6 @@
 ﻿namespace SupermarketPricing;
 
-public record Item(string Name, double Price)
+public record Item(string Name, Money Price)
 {
 
 }
