@@ -1,19 +1,14 @@
-﻿using ValueOf;
+﻿using Vogen;
 namespace SupermarketPricing;
 
-public class Money : ValueOf<decimal, Money>
+[ValueObject<Decimal>]
+public readonly partial struct Money
 {
-    protected override void Validate()
+    public static Validation Validate(decimal value) =>
+        value.Scale <= 2 ? Validation.Ok
+        : Validation.Invalid("No Fractional Pennies");
+    private static decimal NormalizeInput(decimal input)
     {
-        if (!TryValidate())
-            throw new FractionalPennyException(Value.ToString()) { };
+        return input;
     }
-
-    protected override bool TryValidate()
-    {
-        return Value.Scale <= 2;
-    }
-
 }
-
-public class FractionalPennyException(string Message) : Exception(Message) { }

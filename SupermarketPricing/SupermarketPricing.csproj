@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ValueOf" Version="2.0.31" />
+    <PackageReference Include="Vogen" Version="5.0.3" />
   </ItemGroup>
 
 </Project>
