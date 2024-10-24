@@ -9,7 +9,7 @@ public class TestCart
     {
         var emptyCart = new Cart();
 
-        emptyCart.Cost().Should().Be(Money.From(0));
+        emptyCart.Cost().Should().Be(Money.Empty);
     }
 
     [Fact]
