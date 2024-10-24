@@ -8,13 +8,15 @@ public readonly partial struct Money:
     IAdditionOperators<Money, Money, Money>,
     ISubtractionOperators<Money, Money, Money>
 {
+    public static Money FromFloored(decimal value)
+    {
+        return Money.From(Decimal.Round(value, 2, MidpointRounding.ToZero));
+    }
+
     public static Validation Validate(decimal value) =>
         value.Scale <= 2 ? Validation.Ok
         : Validation.Invalid("No Fractional Pennies");
-    private static decimal NormalizeInput(decimal input)
-    {
-        return input;
-    }
+    private static decimal NormalizeInput(decimal input) => input;
 
     public static Money operator +(Money left, Money right)
         => From(left.Value + right.Value);

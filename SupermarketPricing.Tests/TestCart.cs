@@ -12,42 +12,38 @@ public class TestCart
         emptyCart.Cost().Should().Be(Money.Empty);
     }
 
-    [Fact]
-    public void CartWithItem()
+    public static TheoryData<decimal[], decimal> Sums() =>
+        new()
+        {
+            {[5], 5 },
+            {[5, 5], 10 },
+            {[.01m,.01m,.01m,.01m,.01m,.01m,.01m,.01m,.01m,.01m,], .1m }
+        };
+    [Theory]
+    [MemberData(nameof(Sums))]
+    public void CartCost(decimal[] values, decimal expectedResult)
     {
-        var fiveDollarItem = new Item("burger", Money.From(5));
-        var justFiveDollarItem = new Cart { Items = [fiveDollarItem] };
+        var cart = new Cart();
+        cart.Items.AddRange(values.Select(v => new Item("", Money.From(v))));
 
-        justFiveDollarItem.Cost().Should().Be(Money.From(5));
+        cart.Cost().Should().Be(Money.From(expectedResult));
     }
 
-    [Fact]
-    public void CartWithManyItems()
+    public static TheoryData<decimal[], decimal> HalfSums() =>
+        new(){
+            { [1, 1, 1 ], 1.5m},
+            { [10], 5 },
+            { [5], 2.5m},
+            { [.01m ], .01m} //don't create fractional pennies
+        };
+    [Theory]
+    [MemberData(nameof(HalfSums))]
+    public void CartCostHalfOff(decimal[] values, decimal expectedResult)
     {
-        var fiveDollarItem = new Item("burger", Money.From(5));
-        var twoFiveDollarItems = new Cart { Items = [fiveDollarItem, fiveDollarItem] };
+        var cart = new Cart();
+        cart.Items.AddRange(values.Select(v => new Item("", Money.From(v))));
+        cart.Discounts.Add(Discount.HalfOff);
 
-        twoFiveDollarItems.Cost().Should().Be(Money.From(10));
-    }
-
-    [Fact]
-    public void CartItemChange()
-    {
-        var pennyItem = new Item("candy", Money.From(.01m));
-        var tenPennyItems = new Cart { Items = Enumerable.Repeat(pennyItem, 10).ToList() };
-
-        tenPennyItems.Cost().Should().Be(Money.From(.10m));
-    }
-
-    [Fact]
-    public void CartItemWithHalfOff()
-    {
-        var tenDollarItem = new Item("burger", Money.From(10));
-        var tenDollarItems = new Cart {
-            Items = [tenDollarItem],
-            Discounts = [Discount.HalfOff] };
-
-
-        tenDollarItems.Cost().Should().Be(Money.From(5));
+        cart.Cost().Should().Be(Money.From(expectedResult));
     }
 }
