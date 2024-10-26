@@ -4,7 +4,7 @@ namespace SupermarketPricing;
 
 [ValueObject<decimal>]
 [Instance("Empty", 0)]
-public readonly partial struct Money:
+public readonly partial struct Money :
     IAdditionOperators<Money, Money, Money>,
     ISubtractionOperators<Money, Money, Money>
 {
@@ -16,12 +16,21 @@ public readonly partial struct Money:
         : Validation.Invalid("No Fractional Pennies");
     private static decimal NormalizeInput(decimal input) => input;
 
-    public static Money operator +(Money left, Money right) => 
+    public static Money operator +(Money left, Money right) =>
         From(left.Value + right.Value);
 
-    public static Money operator -(Money left, Money right) => 
+    public static Money operator -(Money left, Money right) =>
         From(left.Value - right.Value);
+
+    public static MoneyPlus operator /(Money left, int right)
+    {
+        var moneyPlusFractionalPenny = left.Value / right;
+        var fractionalPenny = Math.Truncate(moneyPlusFractionalPenny * 100) / 100;
+        return new(FromFloored(moneyPlusFractionalPenny), fractionalPenny);
+    }
 }
+
+public record MoneyPlus(Money Money, decimal FractionalPenny) { }
 
 public static class MoneyExtentions
 {

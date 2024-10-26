@@ -5,7 +5,12 @@ namespace SupermarketPricing;
 public record Discount(string Name, Func<IEnumerable<Item>, Money> Adjustment)
 {
     public static Discount HalfOff => new("Half Off Everything",
-        (items) => Money.FromFloored(items.Sum(item => item.Price).Value / 2));
+        (items) =>
+        {
+            var halfPlusFractionalPenny = items.Sum(item => item.Price) / 2;
+            return halfPlusFractionalPenny.Money; //throw away fractional penny
+        });
+
     public static Discount BoGoAnyOnce => new("Buy Any Get Any Equal or Lesser Value Free. Limit 1",
         (items) => BoGoStrictItemPair(items, usageLimit: 1));
 
@@ -22,9 +27,9 @@ public record Discount(string Name, Func<IEnumerable<Item>, Money> Adjustment)
         var pairedItems = evens.Zip(odds, (more, less) => (more, less));
 
         var discount = Money.Empty;
-        foreach (var pair in pairedItems)
+        foreach (var (more, less) in pairedItems)
         {
-            discount += pair.less.Price;
+            discount += less.Price;
         }
 
         return discount;
