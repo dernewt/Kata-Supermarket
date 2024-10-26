@@ -46,4 +46,22 @@ public class TestCart
 
         cart.Cost().Should().Be(Money.From(expectedResult));
     }
+
+    public static TheoryData<decimal[], decimal> BoGoOnceSums() =>
+    new(){
+            { [5, 4, 3, 2], 10},
+            { [10], 10},
+            { [1, 2, 3], 4},
+            { [ ], 0}
+    };
+    [Theory]
+    [MemberData(nameof(BoGoOnceSums))]
+    public void CartCostBoGo(decimal[] values, decimal expectedResult)
+    {
+        var cart = new Cart();
+        cart.Items.AddRange(values.Select(v => new Item("", Money.From(v))));
+        cart.Discounts.Add(Discount.BoGoAnyOnce);
+
+        cart.Cost().Should().Be(Money.From(expectedResult));
+    }
 }

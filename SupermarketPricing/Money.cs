@@ -2,27 +2,25 @@
 using Vogen;
 namespace SupermarketPricing;
 
-[ValueObject<Decimal>]
+[ValueObject<decimal>]
 [Instance("Empty", 0)]
 public readonly partial struct Money:
     IAdditionOperators<Money, Money, Money>,
     ISubtractionOperators<Money, Money, Money>
 {
-    public static Money FromFloored(decimal value)
-    {
-        return Money.From(Decimal.Round(value, 2, MidpointRounding.ToZero));
-    }
+    public static Money FromFloored(decimal value) =>
+        From(decimal.Round(value, 2, MidpointRounding.ToNegativeInfinity));
 
     public static Validation Validate(decimal value) =>
         value.Scale <= 2 ? Validation.Ok
         : Validation.Invalid("No Fractional Pennies");
     private static decimal NormalizeInput(decimal input) => input;
 
-    public static Money operator +(Money left, Money right)
-        => From(left.Value + right.Value);
+    public static Money operator +(Money left, Money right) => 
+        From(left.Value + right.Value);
 
-    public static Money operator -(Money left, Money right)
-        => From(left.Value - right.Value);
+    public static Money operator -(Money left, Money right) => 
+        From(left.Value - right.Value);
 }
 
 public static class MoneyExtentions
