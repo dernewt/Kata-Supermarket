@@ -8,7 +8,7 @@ public readonly partial struct Money :
     IAdditionOperators<Money, Money, Money>,
     ISubtractionOperators<Money, Money, Money>
 {
-    public static Money FromFloored(decimal value) =>
+    public static Money FromIgnoringFractionalPenny(decimal value) =>
         From(decimal.Round(value, 2, MidpointRounding.ToNegativeInfinity));
 
     public static Validation Validate(decimal value) =>
@@ -29,9 +29,10 @@ public readonly partial struct Money :
 public record MoneyPlus(Money Money, decimal FractionalPenny)
 {
     public MoneyPlus(decimal valueWithFrationalPenny)
-        : this(Money.FromFloored(valueWithFrationalPenny), Math.Truncate(valueWithFrationalPenny * 100) / 100)
-    {
-    }
+        : this(
+              Money: Money.FromIgnoringFractionalPenny(valueWithFrationalPenny),
+              FractionalPenny: Math.Truncate(valueWithFrationalPenny * 100) / 100)
+    { }
 }
 
 public static class MoneyExtentions
