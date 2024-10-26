@@ -32,3 +32,23 @@ To help developers get the same benefits from practicing, we’re putting together
 There are no right or wrong answers in these kata: the benefit comes from the process, not from the result.
 
 Posted by Dave Thomas (@PragDave) Dec 29th, 2013
+
+# Implemenation Thoughts
+
+Yet to be implemented ideas or things that don't sit right.
+
+## Recepit
+
+Some way to make a recipt that documents Cart.Cost
+
+## Discounts per Item
+
+A way to track when a discount is applied to an item to stop double discounts, may also help the Receipt problem.
+
+## Money file growth
+
+Is the Money file too big? Has 3 classes.
+
+## TestCart is implementation test
+
+Many of the tests in TestCart really need to explode into unit tests of the actual parts that make up Cost.
