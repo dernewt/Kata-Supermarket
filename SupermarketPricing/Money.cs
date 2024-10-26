@@ -22,15 +22,17 @@ public readonly partial struct Money :
     public static Money operator -(Money left, Money right) =>
         From(left.Value - right.Value);
 
-    public static MoneyPlus operator /(Money left, int right)
-    {
-        var moneyPlusFractionalPenny = left.Value / right;
-        var fractionalPenny = Math.Truncate(moneyPlusFractionalPenny * 100) / 100;
-        return new(FromFloored(moneyPlusFractionalPenny), fractionalPenny);
-    }
+    public static MoneyPlus operator /(Money left, int right) =>
+        new(left.Value / right);
 }
 
-public record MoneyPlus(Money Money, decimal FractionalPenny) { }
+public record MoneyPlus(Money Money, decimal FractionalPenny)
+{
+    public MoneyPlus(decimal valueWithFrationalPenny)
+        : this(Money.FromFloored(valueWithFrationalPenny), Math.Truncate(valueWithFrationalPenny * 100) / 100)
+    {
+    }
+}
 
 public static class MoneyExtentions
 {
